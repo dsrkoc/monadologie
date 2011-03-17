@@ -1,4 +1,4 @@
-package hr.helix.monadologie
+package hr.helix.monadologie.monads
 
 interface Monad<M> {       // ... zapravo, Monad[M[A]]
 
