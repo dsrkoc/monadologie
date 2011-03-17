@@ -16,14 +16,14 @@ class Each {
         processOuter(propNames, yieldStep)
     }
     
-    private processOuter(names, Closure action) {
+    private processOuter(names, Closure yieldAction) {
         def (curr, rest) = [names.head(), names.tail()]
         
         def currList = propVals[curr]
         
         if (rest)
             flatMap(currList, curr) {
-                processOuter(rest, action)
+                processOuter(rest, yieldAction)
             }
         else
             currList.findAll { elem ->
@@ -31,7 +31,7 @@ class Each {
                 guards.every { grd -> grd() }
             }.collect { elem ->
                 currProp[curr] = elem
-                action()
+                yieldAction()
             }
     }
     
