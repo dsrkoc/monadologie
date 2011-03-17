@@ -1,15 +1,10 @@
 package hr.helix.monadologie
 
+import hr.helix.monadologie.monads.Monad
+
 class MonadComprehension {
 
     // ----- monad wrappers -----
-
-    private static class Env {
-        private Map<String, Object> env = [:]
-
-        def propertyMissing(String name) { env[name] }
-        def propertyMissing(String name, val) { env[name] = val }
-    }
 
     private static class BaseCategory<M> {
         static M fmap(M m, Closure f) { m.bind { a -> m.unit(f(a)) }}
@@ -36,11 +31,12 @@ class MonadComprehension {
 
     private Class category(Collection c) { CollectionCategory }
     private Class category(Map c) { MapCategory }
+    private Class category(Monad m) { BaseCategory }
     private Class category(Object o) { throw new RuntimeException("unsupported monad category: ${o.getClass().name}") }
 
     // ----- container storage -----
 
-    private Map<String, Monad> propVals = [:]
+    private Map<String, Object> propVals = [:]
     private List<String> propNames = []
     private List<Closure> guards   = []
     private Map<String, Object> currProp = [:]
@@ -83,9 +79,6 @@ class MonadComprehension {
                 }.fmap { elem ->
                     inContext(curr, elem, yieldAction)()
                 }
-                /*bind { elem ->*/
-                /*    currMonad.unit(inContext(curr, elem, yieldAction)())*/
-                /*}*/
         }
     }
 
