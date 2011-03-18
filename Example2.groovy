@@ -10,14 +10,14 @@ class LineItem { Option<Product> product }
 class Product { String name }
 
 def prod =
-    /*None*/
+    /*None()*/
     Some(new Product(name:'a new product'))
 def maybeOrder = new Order(
         lineItem: Some(
             new LineItem( product: prod)
         )
 )
-/*maybeOrder.lineItem = None*/
+/*maybeOrder.lineItem = None()*/
 
 res = foreach {
     order    = takeFrom { Some(maybeOrder) }

@@ -6,6 +6,6 @@ abstract class Option<A> {
     private static final NONE = new None<A>()
 
     static Option Some(A a) { new Some<A>(a) }
-    static Option None = NONE
+    static Option None()    { NONE }
 }
 
