@@ -3,9 +3,14 @@ package hr.helix.monadologie.monads
 abstract class Option<A> {
     abstract A get()
 
-    private static final NONE = new None<A>()
+    static <T> Option<T> Some(final T a) { new Some<T>(a) }
+    static <T> Option<T> None() { new None<T>() }
 
-    static Option Some(A a) { new Some<A>(a) }
-    static Option None()    { NONE }
+    Boolean isSome() { this in Some }
+    Boolean isNone() { this in None }
+
+    A orSome(final A a) { isSome() ? get() : a }
+
+    Option<A> orElse(final Option<A> o) { isSome() ? this : o }
 }
 
