@@ -6,6 +6,9 @@ class MonadComprehension {
 
     // ----- monad wrappers -----
 
+    /* TODO How about proving that the categories actually make monads?
+            Hint: three monad laws must be obeyed at all times */
+
     private static class BaseCategory<M> {
         static M fmap(M m, Closure f) { m.bind { a -> m.unit(f(a)) }}
         /*static Collection fmap(M m, Closure f) { m.collect { a -> f(a) }}*/
