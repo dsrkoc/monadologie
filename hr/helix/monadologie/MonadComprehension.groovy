@@ -16,7 +16,9 @@ class MonadComprehension {
 
     private static class CollectionCategory extends BaseCategory<Collection> {
         static Collection unit(Collection coll, elem) { coll.getClass().newInstance() << elem }
-        static Collection bind(Collection coll, Closure f) { coll.inject(coll.getClass().newInstance()) { r, e -> r + f(e) }}
+        static Collection bind(Collection coll, Closure f) {
+            coll.inject(coll.getClass().newInstance()) { r, e -> r + f(e) }
+        }
         static Collection filter(Collection coll, Closure f) { coll.findAll(f) }
     }
 
@@ -35,7 +37,9 @@ class MonadComprehension {
     private Class category(Collection c) { CollectionCategory }
     private Class category(Map c) { MapCategory }
     private Class category(Monad m) { BaseCategory }
-    private Class category(Object o) { throw new RuntimeException("unsupported monad category: ${o.getClass().name}") }
+    private Class category(Object o) {
+        throw new RuntimeException("unsupported monad category: ${o.getClass().name}")
+    }
 
     // ----- container storage -----
 

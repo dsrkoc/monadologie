@@ -45,3 +45,15 @@ res = foreach {
     yield { a + b.value }
 }
 println "result5 = $res; class=${c(res)}"
+
+res = foreach {
+    a = takeFrom {
+        foreach {
+            b = takeFrom { [a:1, b:2] }
+            yield { b.value }
+        }
+    }
+    yield { a + 1 }
+}
+println "-----"
+println "result6 = $res; expecting [2, 3] (nested foreach)"
