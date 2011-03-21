@@ -11,7 +11,6 @@ class MonadComprehension {
 
     private static class BaseCategory<M> {
         static M fmap(M m, Closure f) { m.bind { a -> m.unit(f(a)) }}
-        /*static Collection fmap(M m, Closure f) { m.collect { a -> f(a) }}*/
     }
 
     private static class CollectionCategory extends BaseCategory<Collection> {
@@ -80,12 +79,16 @@ class MonadComprehension {
                     currProp[curr] = elem
                     processOuter(rest, yieldAction)
                 }
-            else
-                currMonad.filter { elem ->
-                    guards.every { inContext(curr, elem, it)() }
-                }.fmap { elem ->
+            else {
+                def container = guards ? // filter if at least one guard is given
+                    currMonad.filter { elem ->
+                        guards.every { inContext(curr, elem, it)() }
+                    } : currMonad
+
+                container.fmap { elem ->
                     inContext(curr, elem, yieldAction)()
                 }
+            }
         }
     }
 
