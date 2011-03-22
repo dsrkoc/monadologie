@@ -1,0 +1,34 @@
+/*
+ * Monadic excercies in Groovy
+ * ---------------------------
+ * build script
+ *
+ * © 2011, Dinko Srkoč
+ */
+
+apply plugin:'groovy'
+
+version = '0.1'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    groovy group:'org.codehaus.groovy', name:'groovy-all', version:'1.7.10', ext:'jar'
+    testCompile 'org.spockframework:spock-core:0.5-groovy-1.7'
+}
+
+sourceSets {
+    main {
+        groovy {
+            srcDir 'src'
+        }
+    }
+    test {
+        groovy {
+            srcDir 'test'
+        }
+    }
+}
+

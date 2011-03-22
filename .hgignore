@@ -1,2 +1,7 @@
+
 syntax:glob
 *.swp
+.gradle
+build
+*.iml
+*.jar
