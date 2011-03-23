@@ -1,4 +1,3 @@
-import hr.helix.monadologie.*
 import static hr.helix.monadologie.MonadComprehension.foreach
 
 def c(o) { o.getClass().name }

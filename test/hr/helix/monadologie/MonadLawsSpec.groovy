@@ -10,6 +10,8 @@ import static hr.helix.monadologie.MonadComprehension.MapCategory.unit as m_unit
 import hr.helix.monadologie.monads.*
 
 /**
+ * Running monad laws on unsuspecting monads.
+ *
  * @author Dinko Srkoč
  * @since 2011-03-22
  */
