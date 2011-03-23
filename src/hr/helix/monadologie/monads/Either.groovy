@@ -88,6 +88,12 @@ abstract class Either<L, R> {
                 throw new RuntimeException('left.value on Right')
         }
 
+        /**
+         * The Either value underlying this projection.
+         * @return Either object encapsulated by the projection
+         */
+        Either<A, B> either() { e }
+
         // --- Monad interface implementation ---
 
         Either unit(A a) { Either.left(a) }
@@ -117,6 +123,12 @@ abstract class Either<L, R> {
             else
                 throw new RuntimeException('right.value on Left')
         }
+
+        /**
+         * The Either value underlying this projection.
+         * @return Either object encapsulated by the projection
+         */
+        Either<A, B> either() { e }
 
         // --- Monad interface implementation ---
 
