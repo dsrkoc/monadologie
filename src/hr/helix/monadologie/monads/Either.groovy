@@ -21,7 +21,7 @@ abstract class Either<L, R> {
         e.isLeft() ? e.left().get() : e.right().get()
     }
 
-    private static class Left<L, R> extends Either<L, R> {
+    private static final class Left<L, R> extends Either<L, R> {
         private final L value
 
         Left(final L l) { value = l }
@@ -30,9 +30,25 @@ abstract class Either<L, R> {
         Boolean isRight() { false }
 
         String toString() { "Left($value)" }
+
+        boolean equals(o) {
+            if (this.is(o)) return true;
+            if (getClass() != o.class) return false;
+
+            Left left = (Left) o;
+
+            if (value != left.value) return false;
+
+            return true;
+        }
+
+        int hashCode() {
+            return (value != null ? value.hashCode() : 0);
+        }
+
     }
 
-    private static class Right<L, R> extends Either<L, R> {
+    private static final class Right<L, R> extends Either<L, R> {
         private final R value
 
         Right(final R r) { value = r }
@@ -41,6 +57,21 @@ abstract class Either<L, R> {
         Boolean isRight() { true }
 
         String toString() { "Right($value)" }
+
+        boolean equals(o) {
+            if (this.is(o)) return true;
+            if (getClass() != o.class) return false;
+
+            Right right = (Right) o;
+
+            if (value != right.value) return false;
+
+            return true;
+        }
+
+        int hashCode() {
+            return (value != null ? value.hashCode() : 0);
+        }
     }
 
     final class LeftProjection<A, B> implements Monad<Either> {
