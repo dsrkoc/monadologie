@@ -6,14 +6,11 @@ class MonadComprehension {
 
     // ----- monad wrappers -----
 
-    /* TODO How about proving that the categories actually make monads?
-            Hint: three monad laws must be obeyed at all times */
-
-    private static class BaseCategory<M> {
+    private static class FunctorCategory<M> {
         static M fmap(M m, Closure f) { m.bind { a -> m.unit(f(a)) }}
     }
 
-    private static class CollectionCategory extends BaseCategory<Collection> {
+    private static class CollectionCategory extends FunctorCategory<Collection> {
         static Collection unit(Collection coll, elem) { coll.getClass().newInstance() << elem }
         static Collection bind(Collection coll, Closure f) {
             coll.inject(coll.getClass().newInstance()) { r, e -> r + f(e) }
@@ -21,7 +18,7 @@ class MonadComprehension {
         static Collection filter(Collection coll, Closure f) { coll.findAll(f) }
     }
 
-    private static class MapCategory extends BaseCategory<Map> {
+    private static class MapCategory extends FunctorCategory<Map> {
         static Map unit(Map map, Map elem) { elem.clone() }
         static Map unit(Map map, Map.Entry elem) { [:] << elem }
         static Map unit(Map map, key, value) { [(key):value] }
@@ -35,7 +32,7 @@ class MonadComprehension {
 
     /* List is easily processed under Collection, but Range isn't.
        It, however, can be processed as List. */
-    private static class ListCategory extends BaseCategory<List> {
+    private static class ListCategory extends FunctorCategory<List> {
         static List unit(List list, elem) { [elem] }
         static List bind(List list, Closure f) { list.inject([]) { r, e -> r + f(e) }}
         static List filter(List list, Closure f) { list.findAll(f) }
@@ -44,7 +41,7 @@ class MonadComprehension {
     private Class category(List r) { ListCategory } // ... for Ranges more than Lists
     private Class category(Collection c) { CollectionCategory }
     private Class category(Map c) { MapCategory }
-    private Class category(Monad m) { BaseCategory }
+    private Class category(Monad m) { FunctorCategory }
     private Class category(Object o) {
         throw new RuntimeException("unsupported monad category: ${o.getClass().name}")
     }
