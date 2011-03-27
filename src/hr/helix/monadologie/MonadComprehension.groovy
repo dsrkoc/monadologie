@@ -24,7 +24,7 @@ class MonadComprehension {
         static Map unit(Map map, key, value) { [(key):value] }
         static Map unit(Map map, value) { [(value):value] }
 
-        static Map bind(Map map, Closure f) { map.inject([:]) { r, e -> r + f(e) }}
+        static List bind(Map map, Closure f) { map.inject([]) { r, e -> r + f(e) }}
         static Map filter(Map map, Closure f) { map.findAll(f) }
 
         static List fmap(Map map, Closure f) { map.collect { a -> f(a) }}
