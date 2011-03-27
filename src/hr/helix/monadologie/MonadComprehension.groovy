@@ -31,15 +31,15 @@ class MonadComprehension {
     }
 
     /* List is easily processed under Collection, but Range isn't.
-       It, however, can be processed as List. */
+       Range, however, can be processed as List. */
     private static class ListCategory extends FunctorCategory<List> {
         static List unit(List list, elem) { [elem] }
         static List bind(List list, Closure f) { list.inject([]) { r, e -> r + f(e) }}
         static List filter(List list, Closure f) { list.findAll(f) }
     }
 
-    private Class category(List r) { ListCategory } // ... for Ranges more than Lists
     private Class category(Collection c) { CollectionCategory }
+    private Class category(Range c) { ListCategory }
     private Class category(Map c) { MapCategory }
     private Class category(Monad m) { FunctorCategory }
     private Class category(Object o) {
