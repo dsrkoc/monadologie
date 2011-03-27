@@ -144,6 +144,7 @@ abstract class Either<L, R> {
                 Option.none()
         }
     }
+
     static <A, B> List<A> lefts(List<Either<A, B>> es) {
         es.inject([]) { res, e ->
             e.isLeft() ? (res << e.left().value) : res

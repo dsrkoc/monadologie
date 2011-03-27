@@ -1,6 +1,7 @@
 package hr.helix.monadologie.monads
 
 abstract class Option<A> implements Monad<Option<A>> {
+
     abstract A get()
 
     static <T> Option<T> some(final T a) { new Some<T>(a) }
@@ -12,11 +13,15 @@ abstract class Option<A> implements Monad<Option<A>> {
     A orSome(final A a) { isSome() ? get() : a }
 
     Option<A> orElse(final Option<A> o) { isSome() ? this : o }
-    
+
     private static final class Some<A> extends Option<A> {
+        @Delegate List wrapper
         private final A value
 
-        Some(final A val) { value = val }
+        private Some(final A val) {
+            value = val
+            wrapper = [val]
+        }
 
         A get() { value }
 
@@ -39,6 +44,10 @@ abstract class Option<A> implements Monad<Option<A>> {
     }
 
     private static final class None<A> extends Option<A> {
+        @Delegate List wrapper
+
+        private None() { wrapper = [] }
+
         A get() { throw new RuntimeException('Cannot resolve value on None') }
 
         @Override String toString() { 'None' }
@@ -70,4 +79,3 @@ abstract class Option<A> implements Monad<Option<A>> {
         this in None ? this : someVal()
     }
 }
-
