@@ -53,5 +53,7 @@ class ComprehensionSpec extends Specification {
         [[1, 2], some(3)]       | { a, b -> a + b }       | [4, 5]
         [[1, 2], none()]        | { a, b -> a + b }       | []
         [[a:1, b:2], some(3)]   | { a, b -> a.value }     | [1, 2]
+        [[a:1, b:2], [2, 3]]    | { a, b -> a.value + b.value } | [3, 4, 4, 5]
+        [[2, 3], [a:1, b:2]]    | { a, b -> a.value + b.value } | [3, 4, 4, 5]
     }
 }
