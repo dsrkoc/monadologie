@@ -1,17 +1,17 @@
 package hr.helix.monadologie.monads
 
 /**
- * Implementors of this interface may be considered monads.
+ * Implementors of this interface may be considered monads.<br>
  * However, they must satisfy monad laws:
- * 
- * 1) identity:
- *    m bind unit ≡ m
+ * <ol>
+ *     <li>    identity:    <p>
+ *     <code>  m bind unit ≡ m </code>
  *
- * 2) unit:
- *    unit(x) bind f ≡ f(x)
+ *     <li>    unit:        <p>
+ *     <code>  unit(x) bind f ≡ f(x) </code>
  *
- * 3) composition:
- *    m bind g bind f ≡ m bind (g(x) bind f)
+ *     <li>    composition: <p>
+ *     <code>  m bind g bind f ≡ m bind (g(x) bind f) </code>
  */
 interface Monad<M> {       // ... zapravo, Monad[M[A]]
 
