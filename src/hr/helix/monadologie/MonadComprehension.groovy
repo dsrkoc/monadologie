@@ -71,6 +71,8 @@ class MonadComprehension {
     private List<Closure> guards   = []
     private Map<String, Object> currProp = [:]
 
+    private freeFunctions = []
+
     // ----- comprehension interface -----
 
     private takeFrom(Closure vals) { vals }
@@ -96,6 +98,7 @@ class MonadComprehension {
         def (curr, rest) = [names.head(), names.tail()]
         
         def currMonad = ctx(this, propVals[curr])()
+        applyOptionalFn(currMonad)
 
         use(category(currMonad)) {
             if (rest)
@@ -116,6 +119,28 @@ class MonadComprehension {
         }
     }
 
+    /**
+     * Queries for potential calls to unbound functions that may (or may not)
+     * belong to the current monad. If such monad function is found, it is immediately
+     * applied to its arguments.
+     *
+     * @param monad the currently used monad
+     */
+    private applyOptionalFn(monad) {
+        if (freeFunctions) {
+            def fnInfo = freeFunctions.head()
+            /*try {
+             ... to catch the possible exception or not to catch: that is the question */
+                monad."${fnInfo.fn}"(*fnInfo.args)
+//                monad.metaClass.invokeMethod(monad, fnInfo.fn, fnInfo.args)
+                freeFunctions.remove(0) // the function is used up, time for the next one
+            /*}
+            catch (MissingMethodException ignored) {
+                // the method apparently doesn't belong to this monad, maybe next time
+            }*/
+        }
+    }
+
     // ----- dynamic properties -----
 
     def propertyMissing(String name) {
@@ -125,6 +150,10 @@ class MonadComprehension {
     def propertyMissing(String name, val) {
         propVals[name] = val
         propNames << name
+    }
+
+    def methodMissing(String name, args) {
+        freeFunctions << [ fn:name, args:args ]
     }
 
     // ----- runner -----

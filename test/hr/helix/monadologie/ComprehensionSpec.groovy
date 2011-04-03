@@ -61,4 +61,39 @@ class ComprehensionSpec extends Specification {
         [[a:1, b:2], [2, 3]]    | { a, b -> a.value + b.value } | [3, 4, 4, 5]
         [[2, 3], [a:1, b:2]]    | { a, b -> a.value + b.value } | [3, 4, 4, 5]
     }
+
+    def 'optional monad methods should be callable from the foreach closure'() {
+        given:
+        List.metaClass.appendVal = { v -> delegate << v }
+        def origList = [1, 2, 3]
+        def origSize = origList.size()
+        def val = 100
+        
+        when:
+        def list = foreach {
+            a = takeFrom { origList }
+            appendVal(val)
+            yield { a }
+        }
+
+        then:
+        list.size() == origSize + 1
+        list[-1] == val
+    }
+
+    def 'nonexistent optional methods should throw MissingMethodException'() {
+        given:
+        List.metaClass.callMe = { throw new RuntimeException("I should not have been called!") }
+
+        when:
+        foreach {
+            l = takeFrom { [aa:2, bb:3] }
+            m = takeFrom { [1, 2, 3] }
+            callMe() // should fail because Map is the monad du jour
+            yield { l + m }
+        }
+
+        then:
+        thrown(MissingMethodException)
+    }
 }
