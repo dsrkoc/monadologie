@@ -5,6 +5,8 @@ import hr.helix.monadologie.MonadComprehension as MC
 import static hr.helix.monadologie.MonadComprehension.CollectionCategory.unit as c_unit
 import static hr.helix.monadologie.MonadComprehension.ListCategory.unit as l_unit
 import static hr.helix.monadologie.MonadComprehension.MapCategory.unit as m_unit
+import static hr.helix.monadologie.mcategories.MReaderCategory.unit as f_unit
+import static hr.helix.monadologie.mcategories.MReaderCategory.bind as f_bind
 import hr.helix.monadologie.monads.*
 
 /**
@@ -53,6 +55,59 @@ class MonadLawsSpec extends Specification {
 
         where:
         monad << [ [a: 1, b: 2], [c: 5] ]
+    }
+
+    def 'build-in support for closures (reader monad) should obey the monad laws'() {
+        given:
+        def a = 1
+        def f = {{x -> x + 2}}
+        def g = {{x -> x * 2}}
+
+        when:
+        // law: right identity
+        def idLeft = f_bind(monad, { x -> f_unit(monad, x) })
+        def idRight = monad
+
+        // law: left identity
+        def unitLeft  = f_bind(monad, f),
+            unitRight = f(a)
+
+        // law: associativity
+        def ascLeft  = f_bind( f_bind(monad, { x -> g(x) }), { y -> f(y) } ),
+            ascRight = f_bind( monad, { x -> f_bind(g(x), { y -> f(y) }) } )
+        
+        then:
+        idLeft(a)   == idRight(a)
+        unitLeft(a) == unitRight(a)
+        ascLeft(a)  == ascRight(a)
+
+        where:
+        monad << [{ x -> x + 1 }, { x -> x * 3 }, { x -> x * x }]
+    }
+
+    def 'reader monad should obey the monad laws'() {
+        given:
+        def a = 1
+        def f = { Reader.fn({x -> x + 2}) }
+        def g = { Reader.fn({x -> x * 2}) }
+
+        when:
+        def idLeft  = monad.bind({ x -> monad.unit(x) })
+        def idRight = monad
+
+        def unitLeft  = monad.bind(f),
+            unitRight = f(a)
+
+        def ascLeft  = monad.bind({ x -> g(x) }).bind({ y -> f(y) }),
+            ascRight = monad.bind({ x -> g(x).bind({ y -> f(y) }) })
+
+        then:
+        idLeft(a) == idRight(a)
+        unitLeft(a) == unitRight(a)
+        ascLeft(a) == ascRight(a)
+
+        where:
+        monad << [ Reader.fn({x->x+1}), Reader.fn({x->x*3}), Reader.fn({x->x*x}) ]
     }
 
     def 'Option monad should obey the monad laws'() {

@@ -1,14 +1,12 @@
 package hr.helix.monadologie
 
 import hr.helix.monadologie.monads.Monad
+import hr.helix.monadologie.mcategories.FunctorCategory
+import hr.helix.monadologie.mcategories.MReaderCategory
 
 class MonadComprehension {
 
-    // ----- monad wrappers -----
-
-    private static class FunctorCategory<M> {
-        static M fmap(M m, Closure f) { m.bind { a -> m.unit(f(a)) }}
-    }
+    // ----- monad makers -----
 
     private static class CollectionCategory extends FunctorCategory<Collection> {
         static Collection unit(Collection coll, elem) { coll.getClass().newInstance() << elem }
@@ -56,10 +54,18 @@ class MonadComprehension {
         static List filter(List list, Closure f) { list.findAll(f) }
     }
 
+    // choosing the categories to be used on given monads
+
     private Class category(Collection c) { CollectionCategory }
-    private Class category(Range c) { ListCategory }
+
+    private Class category(Range r) { ListCategory }
+
     private Class category(Map c) { MapCategory }
+
+    private Class category(Closure m) { MReaderCategory }
+
     private Class category(Monad m) { FunctorCategory }
+    
     private Class category(Object o) {
         throw new RuntimeException("unsupported monad category: ${o.getClass().name}")
     }
