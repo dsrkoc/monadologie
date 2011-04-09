@@ -154,6 +154,31 @@ class MonadLawsSpec extends Specification {
         a << [1, 2]
     }
 
+    def 'State monad should obey the monad laws'() {
+        given:
+        def f = { State.state({s -> [s + [2,3], 2]}) }
+        def g = { State.state({s -> [s - [1], 1] }) }
+
+        when:
+        def idLeft  = monad.bind({ x -> monad.unit(x) })
+        def idRight = monad
+
+        def unitLeft  = monad.unit(a).bind(f),
+            unitRight = f(a)
+
+        def ascLeft  = monad.bind({ x -> g(x) }).bind({ y -> f(y) }),
+            ascRight = monad.bind({ x -> g(x).bind({ y -> f(y) }) })
+
+        then:
+        idLeft(a)   == idRight(a)
+//        unitLeft(a) == unitRight(a)
+        ascLeft(a)  == ascRight(a)
+
+        where:
+        monad << [ State.state({s -> [s + 1, 1]}), State.state({s -> [s[0..-2], s[-1]]})]
+        a << [[1, 2], [1, 2]]
+    }
+
     private void testMonadCategory(MonadCategory, m, a, f, g) {
         use(MonadCategory) {
             identityLaw(m)
