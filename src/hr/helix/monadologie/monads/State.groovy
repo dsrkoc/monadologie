@@ -15,7 +15,28 @@ class State<S, A> implements Monad<State> {
 
     // ----- static initializers -----
 
-    /** (f: S => State(S, A)) */
+    /* (f: S => State(S, A)) */
+    /**
+     * Returns a new State object that executes the provided function.
+     * The function receives the state value and should return a pair (a list of
+     * two elements): <code> [new state, value] </code>. <p>
+     *
+     * Example:
+     * <pre>
+     * // func receives stateful object and returns a pair
+     * // where the first element is new stateful object
+     * // and the second element is value
+     * def stateFn = { s -> [s + 1, 10] }
+     *
+     * def monad = State.state(stateFn)
+     *
+     * assert monad.state([1, 2]) == [1, 2, 1]
+     * assert monad.value([1, 2]) == 10
+     * </pre>
+     *
+     * @param f state changing function
+     * @return new State instance
+     */
     static <S, A> State<S, A> state(Closure f) {
         f.resolveStrategy = Closure.DELEGATE_ONLY
         (State)(f.delegate = new State<S, A>(call: f)) // unnecessary casting to make IDEA happy

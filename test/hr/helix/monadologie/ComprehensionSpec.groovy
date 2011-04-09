@@ -6,6 +6,7 @@ import static hr.helix.monadologie.monads.Option.some
 import static hr.helix.monadologie.monads.Option.none
 import static hr.helix.monadologie.monads.Either.left as el
 import static hr.helix.monadologie.monads.Either.right as er
+import static hr.helix.monadologie.monads.State.state as st
 
 /**
  * Testing foreach comprehensions.
@@ -60,6 +61,30 @@ class ComprehensionSpec extends Specification {
         [[a:1, b:2], some(3)]   | { a, b -> a.value }     | [1, 2]
         [[a:1, b:2], [2, 3]]    | { a, b -> a.value + b.value } | [3, 4, 4, 5]
         [[2, 3], [a:1, b:2]]    | { a, b -> a.value + b.value } | [3, 4, 4, 5]
+    }
+
+    def 'closures (Reader, State) should also be possible to use in comprehensions'() {
+        when:
+        def rdrRes = foreach {
+            a = takeFrom {{ x -> x + 3 }}
+            b = takeFrom {{ x -> x * 2 }}
+            yield { a + b }
+        }
+
+        def sttRes = foreach {
+            a = takeFrom { st({ s -> [s + 10, 10]}) }
+            b = takeFrom { st({ s -> [s.tail(),  5]}) }
+            yield { a + b }
+        }
+
+        then:
+        rdrRes(1) == 6
+        rdrRes(5) == 18
+
+        sttRes.state([1, 2]) == [2, 10]
+        sttRes.value([1, 2]) == 15
+        sttRes.state([5]) == [10]
+        sttRes.value([5]) == 15
     }
 
     def 'optional monad methods should be callable from the foreach closure'() {
