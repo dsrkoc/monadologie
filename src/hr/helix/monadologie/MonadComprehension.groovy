@@ -72,7 +72,7 @@ class MonadComprehension {
 
     // ----- container storage -----
 
-    private Map<String, Object> propVals = [:]
+    private Map<String, Closure> propVals = [:]
     private List<String> propNames = []
     private List<Closure> guards   = []
     private Map<String, Object> currProp = [:]
