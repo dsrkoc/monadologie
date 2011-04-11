@@ -171,7 +171,7 @@ class MonadLawsSpec extends Specification {
 
         then:
         idLeft(a)   == idRight(a)
-//        unitLeft(a) == unitRight(a)
+        unitLeft(a) == unitRight(a)
         ascLeft(a)  == ascRight(a)
 
         where:
