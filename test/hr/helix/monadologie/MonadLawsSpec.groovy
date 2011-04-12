@@ -154,6 +154,21 @@ class MonadLawsSpec extends Specification {
         a << [1, 2]
     }
 
+    def 'Writer monad should obey the monad laws'() {
+        given:
+        def f = { monad.unit(it + 1) }
+        def g = { monad.unit(it * 2) }
+
+        expect:
+        identityLaw(monad)
+        unitLaw(monad, a, f)
+        compositionLaw(monad, f, g)
+
+        where:
+        monad << [ Writer.write(1, ['aaa']), Writer.write(2, ['bbb']), Writer.write(3, 'ccc'), Writer.write(4, 5) ]
+        a << [3, 4, 5, 6]
+    }
+
     def 'State monad should obey the monad laws'() {
         given:
         def f = { State.state({s -> [s + [2,3], 2]}) }

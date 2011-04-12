@@ -7,6 +7,7 @@ import static hr.helix.monadologie.monads.Option.none
 import static hr.helix.monadologie.monads.Either.left as el
 import static hr.helix.monadologie.monads.Either.right as er
 import static hr.helix.monadologie.monads.State.state as st
+import static hr.helix.monadologie.monads.Writer.write as wr
 
 /**
  * Testing foreach comprehensions.
@@ -41,6 +42,9 @@ class ComprehensionSpec extends Specification {
         [er(1).right(), er(2).right()]| { a, b -> a + b }             | er(3)
         [el(1).left(), el(2).left()]  | { a, b -> a + b }             | el(3)
         [er(1).right(), el(2).left()] | { a, b -> a + b }             | el(3)
+        [wr(1, 'aa'), wr(2, 'bb')]    | { a, b -> a + b }             | wr(3, 'aabb')
+        [wr(3, [1, 2]), wr(2, ['aa'])]| { a, b -> a * b }             | wr(6, [1, 2, 'aa'])
+        [wr('a', 1), wr('b', 2)]      | { a, b -> a + b }             | wr('ab', 3)
     }
 
     def 'test comprehensions with different monads'() {
