@@ -67,7 +67,7 @@ class MonadComprehension {
     private Class category(Monad m) { FunctorCategory }
     
     private Class category(Object o) {
-        throw new RuntimeException("unsupported monad category: ${o.getClass().name}")
+        throw new IllegalArgumentException("Unsupported monad category: ${o.getClass().name}")
     }
 
     // ----- container storage -----
