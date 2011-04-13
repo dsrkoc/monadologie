@@ -6,7 +6,7 @@ package hr.helix.monadologie.monads
  * @author Dinko Srkoč
  * @since 2011-04-07
  */
-class State<S, A> implements Monad<State> {
+class State<S, A> implements Monad<State>, Functor<State> {
 
     A value(S s) { this.call(s)[1] }
     S state(S s) { this.call(s)[0] }
