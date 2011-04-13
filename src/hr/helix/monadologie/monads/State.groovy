@@ -1,7 +1,10 @@
 package hr.helix.monadologie.monads
 
 /**
- * The State monad.
+ * The State monad. <p>
+ *
+ * This monad enables us to take a stateful computation and use it without
+ * having to manage the state manually.
  *
  * @author Dinko Srkoč
  * @since 2011-04-07

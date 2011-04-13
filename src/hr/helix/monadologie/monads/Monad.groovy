@@ -15,11 +15,14 @@ package hr.helix.monadologie.monads
  */
 interface Monad<M> {       // ... zapravo, Monad[M[A]]
 
-    /* param   value of type A
-     * returns container of type A
+    /* unit :: a -> M a */
+    /**
+     * Returns a new Monad with value <code> a </code> stored inside.
      *
-     * unit :: a -> M a */
-    M unit(Object a)       // ... unit(A): M[A]
+     * @param a the value to be embedded inside the new Monad
+     * @return a new Monad instance containing the value <code> a </code>
+     */
+     M unit(Object a)       // ... unit(A): M[A]
 
     /* param   m ... container of type A
      * param   f ... transformer function (A => M[B])
