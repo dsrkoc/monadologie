@@ -26,12 +26,12 @@ class State<S, A> implements Monad<State> {
      * // func receives stateful object and returns a pair
      * // where the first element is new stateful object
      * // and the second element is value
-     * def stateFn = { s -> [s + 1, 10] }
+     * def stateFn = { s -> [s + 1, s.size()] }
      *
      * def monad = State.state(stateFn)
      *
      * assert monad.state([1, 2]) == [1, 2, 1]
-     * assert monad.value([1, 2]) == 10
+     * assert monad.value([1, 2]) == 2
      * </pre>
      *
      * @param f state changing function
