@@ -80,17 +80,17 @@ own laws, un-interacting, and each reflecting the entire universe in a pre-estab
 but possess no material or spatial character. (source: [Wikipedia][6])
 
 His monads, however, are *not* related to our monads in any way. Monads used here have their origin in mathematical
-[Category theory][8] from the 1960's. This library is named *monadologie* as an homage to the [first computer scientist][7].
+[Category theory][8] from the 1960's. This library is named *monadologie* as an homage to this [first computer scientist][7].
 
 ### Inspirations
 
 This implementation is in large part inspired by [Scala][3]'s `for` comprehension.
 One notable difference is that in Scala `yield` is optional, thus making `for` behave in
-two different ways. In Monadologie `yield` is always used and there's no duality.
+two different ways. In Monadologie `yield` is used always and there's no such duality.
 
 Of course, if working with monads, one cannot escape [Haskell][4], the "premiere monad language".
 
-### How to build
+### How to Build
 
 #### Requirements
 
@@ -100,20 +100,24 @@ Of course, if working with monads, one cannot escape [Haskell][4], the "premiere
 
 #### The Process
 
-1. get the source (download or git clone)
-2. run `gradle build`, this will assemble the jars and run tests
+1. get the source (download or git clone/hg clone)
+2. run `gradle build`, this will assemble the jars and run the tests
 3. profit
 
-### Learn more
+### What I have so far
 
-Monadologie:
+The following monads are currently implemented:
 
-* wiki page 1
-* wiki page 2
+* Collection (aka List, Sequence), Map
+* Option (aka Maybe)
+* Either
+* Reader
+* Writer
+* State
 
 ### License
 
-Apache Public License, v2.0
+Copyright 2011 Dinko Srko&#0269;. Released under the [Apache Public License, v2.0][9]
 
 
 [1]: http://groovy.codehaus.org                                     "Groovy Programming Language"
@@ -124,3 +128,4 @@ Apache Public License, v2.0
 [6]: http://en.wikipedia.org/wiki/Gottfried_Leibniz#The_monads      "Leibniz: about monads"
 [7]: http://en.wikipedia.org/wiki/Gottfried_Leibniz#Computation     "Leibniz: the computer scientist"
 [8]: http://en.wikipedia.org/wiki/Category_theory                   "Category theory"
+[9]: http://www.apache.org/licenses/LICENSE-2.0                     "Apache Public License, v2.0"
