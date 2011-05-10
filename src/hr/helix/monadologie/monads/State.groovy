@@ -41,7 +41,7 @@ class State<S, A> implements Monad<State>, Functor<State> {
      * @return new State instance
      */
     static <S, A> State<S, A> state(Closure f) {
-        f.resolveStrategy = Closure.DELEGATE_ONLY
+        f.resolveStrategy = Closure.DELEGATE_FIRST
         (State)(f.delegate = new State<S, A>(call: f)) // unnecessary casting to make IDEA happy
     }
 
