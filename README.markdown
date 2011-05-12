@@ -82,6 +82,10 @@ but possess no material or spatial character. (source: [Wikipedia][6])
 His monads, however, are *not* related to our monads in any way. Monads used here have their origin in mathematical
 [Category theory][8] from the 1960's. This library is named *monadologie* as an homage to this [first computer scientist][7].
 
+### Documentation
+
+The documentation for Monadologie can be found on the [wiki][10] pages.
+
 ### Inspirations
 
 This implementation is in large part inspired by [Scala][3]'s `for` comprehension.
@@ -96,7 +100,7 @@ Of course, if working with monads, one cannot escape [Haskell][4], the "premiere
 
 * JDK 1.6
 * Groovy 1.7+
-* [Gradle][2] 1.0+
+* [Gradle][2] 1.0
 
 #### The Process
 
@@ -129,3 +133,4 @@ Copyright 2011 Dinko Srko&#0269;. Released under the [Apache Public License, v2.
 [7]: http://en.wikipedia.org/wiki/Gottfried_Leibniz#Computation     "Leibniz: the computer scientist"
 [8]: http://en.wikipedia.org/wiki/Category_theory                   "Category theory"
 [9]: http://www.apache.org/licenses/LICENSE-2.0                     "Apache Public License, v2.0"
+[10]: https://github.com/dsrkoc/monadologie/wiki                    "Monadologie Documentation"
