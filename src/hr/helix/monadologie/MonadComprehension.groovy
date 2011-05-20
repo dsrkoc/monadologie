@@ -81,11 +81,11 @@ class MonadComprehension {
 
     // ----- comprehension interface -----
 
-    private takeFrom(Closure vals) { vals }
+    def takeFrom(Closure vals) { vals }
     
-    private guard(Closure g) { guards << g }
+    def guard(Closure g) { guards << g }
     
-    private yield(Closure yieldStep) { processOuter(propNames, yieldStep) }
+    def yield(Closure yieldStep) { processOuter(propNames, yieldStep) }
 
     // ----- comprehension implementation -----
 
