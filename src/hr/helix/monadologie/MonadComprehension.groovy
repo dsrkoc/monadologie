@@ -3,64 +3,19 @@ package hr.helix.monadologie
 import hr.helix.monadologie.monads.Monad
 import hr.helix.monadologie.mcategories.FunctorCategory
 import hr.helix.monadologie.mcategories.MReaderCategory
+import hr.helix.monadologie.mcategories.MMapCategory
+import hr.helix.monadologie.mcategories.MListCategory
+import hr.helix.monadologie.mcategories.MCollectionCategory
 
 class MonadComprehension {
 
-    // ----- monad makers -----
-
-    private static class CollectionCategory extends FunctorCategory<Collection> {
-        static Collection unit(Collection coll, elem) { coll.getClass().newInstance() << elem }
-        static Collection bind(Collection coll, Closure f) {
-            coll.inject(coll.getClass().newInstance()) { r, e -> r + f(e) }
-        }
-        static Collection filter(Collection coll, Closure f) { coll.findAll(f) }
-    }
-
-    private static class MapCategory extends FunctorCategory<Map> {
-        static Map unit(Map map, Map elem) { elem.clone() }
-        static Map unit(Map map, Map.Entry elem) { [:] << elem }
-        static Map unit(Map map, key, value) { [(key):value] }
-        static List unit(Map map, List list) { list.clone() } // idea: if list.size == 2 then [ list[0]:list[1] ]
-        static List unit(Map map, value) { [value] }
-
-        static def bind(Map map, Closure f) {
-            map.inject([:]) { r, e ->
-                def fRes = f(e)
-                if (r in Map) {
-                    if (fRes in Map || fRes in Map.Entry)
-                        r << fRes
-                    else // if one unmappable result found, transform whole result
-                        r.collect { it } + fRes // into list
-                }
-                else
-                    r + fRes // r is Map or List
-            }
-        }
-
-        static List bind(List map, Closure f) {
-            map.inject([]) { r, e -> r + f(e) }
-        }
-
-        static Map filter(Map map, Closure f) { map.findAll(f) }
-
-        static List fmap(Map map, Closure f) { map.collect { a -> f(a) }}
-    }
-
-    /* List is easily processed under Collection, but Range isn't.
-       Range, however, can be processed as List. */
-    private static class ListCategory extends FunctorCategory<List> {
-        static List unit(List list, elem) { [elem] }
-        static List bind(List list, Closure f) { list.inject([]) { r, e -> r + f(e) }}
-        static List filter(List list, Closure f) { list.findAll(f) }
-    }
-
     // choosing the categories to be used on given monads
 
-    private Class category(Collection c) { CollectionCategory }
+    private Class category(Collection c) { MCollectionCategory }
 
-    private Class category(Range r) { ListCategory }
+    private Class category(Range r) { MListCategory }
 
-    private Class category(Map c) { MapCategory }
+    private Class category(Map c) { MMapCategory }
 
     private Class category(Closure m) { MReaderCategory }
 
