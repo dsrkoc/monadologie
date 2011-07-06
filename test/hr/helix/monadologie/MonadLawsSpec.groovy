@@ -1,13 +1,13 @@
 package hr.helix.monadologie
 
 import spock.lang.Specification
-import hr.helix.monadologie.MonadComprehension as MC
-import static hr.helix.monadologie.MonadComprehension.CollectionCategory.unit as c_unit
-import static hr.helix.monadologie.MonadComprehension.ListCategory.unit as l_unit
-import static hr.helix.monadologie.MonadComprehension.MapCategory.unit as m_unit
+import static hr.helix.monadologie.mcategories.MCollectionCategory.unit as c_unit
+import static hr.helix.monadologie.mcategories.MListCategory.unit as l_unit
+import static hr.helix.monadologie.mcategories.MMapCategory.unit as m_unit
 import static hr.helix.monadologie.mcategories.MReaderCategory.unit as f_unit
 import static hr.helix.monadologie.mcategories.MReaderCategory.bind as f_bind
 import hr.helix.monadologie.monads.*
+import hr.helix.monadologie.mcategories.*
 
 /**
  * Running monad laws on unsuspecting monads.
@@ -24,7 +24,7 @@ class MonadLawsSpec extends Specification {
         def g = { c_unit(monad, it * 2) }
 
         expect:
-        testMonadCategory(MC.CollectionCategory, monad, a, f, g)
+        testMonadCategory(MCollectionCategory, monad, a, f, g)
 
         where:
         monad << [ [1,2,3], [1,2] as Set]
@@ -37,7 +37,7 @@ class MonadLawsSpec extends Specification {
         def g = { l_unit(monad, it * 2) }
 
         expect:
-        testMonadCategory(MC.ListCategory, monad, a, f, g)
+        testMonadCategory(MListCategory, monad, a, f, g)
 
         where:
         monad << [ [1,2,3], 1..4 ]
@@ -51,7 +51,7 @@ class MonadLawsSpec extends Specification {
         def g = { m_unit(monad, it.value * 2) }
 
         expect:
-        testMonadCategory(MC.MapCategory, monad, a, f, g)
+        testMonadCategory(MMapCategory, monad, a, f, g)
 
         where:
         monad << [ [a: 1, b: 2], [c: 5] ]

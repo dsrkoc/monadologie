@@ -15,7 +15,7 @@ abstract class Option<A> implements Monad<Option<A>> {
     Option<A> orElse(final Option<A> o) { isSome() ? this : o }
 
     private static final class Some<A> extends Option<A> {
-        @Delegate List wrapper
+        @Delegate private List wrapper
         private final A value
 
         private Some(final A val) {
@@ -44,7 +44,7 @@ abstract class Option<A> implements Monad<Option<A>> {
     }
 
     private static final class None<A> extends Option<A> {
-        @Delegate List wrapper
+        @Delegate private List wrapper
 
         private None() { wrapper = [] }
 
@@ -65,7 +65,7 @@ abstract class Option<A> implements Monad<Option<A>> {
 
     // --- Monad interface implementation ---
 
-    Option unit(A a) { some(a) }
+    Option unit(Object a) { some(a) }
 
     Option bind(Closure f) {
         someOrNone { f(get()) }
