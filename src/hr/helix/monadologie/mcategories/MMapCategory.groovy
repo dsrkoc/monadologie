@@ -34,4 +34,14 @@ class MMapCategory extends FunctorCategory<Map> {
     static Map filter(Map map, Closure f) { map.findAll(f) }
 
     static List fmap(Map map, Closure f) { map.collect { a -> f(a) }}
+
+    // MonadPlus interface
+
+    static Map getMzero(Map map) {
+        [:]
+    }
+
+    static Map mplus(Map map, Map other) {
+        map + other
+    }
 }

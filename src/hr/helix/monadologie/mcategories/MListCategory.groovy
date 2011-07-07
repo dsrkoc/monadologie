@@ -20,5 +20,15 @@ class MListCategory extends FunctorCategory<List> {
     static List filter(List list, Closure f) {
         list.findAll(f)
     }
+
+    // MonadPlus interface
+
+    static List getMzero(List list) {
+        []
+    }
+
+    static List mplus(List list, List other) {
+        list + other
+    }
 }
 

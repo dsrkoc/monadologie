@@ -18,5 +18,15 @@ class MCollectionCategory extends FunctorCategory<Collection> {
     static Collection filter(Collection coll, Closure f) {
         coll.findAll(f)
     }
+
+    // MonadPlus interface
+
+    static Collection getMzero(Collection coll) {
+        coll.getClass().newInstance()
+    }
+
+    static Collection mplus(Collection coll, Collection other) {
+        coll + other
+    }
 }
 
