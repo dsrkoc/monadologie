@@ -6,6 +6,7 @@ import hr.helix.monadologie.mcategories.MReaderCategory
 import hr.helix.monadologie.mcategories.MMapCategory
 import hr.helix.monadologie.mcategories.MListCategory
 import hr.helix.monadologie.mcategories.MCollectionCategory
+import hr.helix.monadologie.monads.MonadPlus
 
 class MonadComprehension {
 
@@ -19,6 +20,8 @@ class MonadComprehension {
 
     private Class category(Closure m) { MReaderCategory }
 
+    private Class category(MonadPlus mp) { FunctorCategory }
+    
     private Class category(Monad m) { FunctorCategory }
     
     private Class category(Object o) {

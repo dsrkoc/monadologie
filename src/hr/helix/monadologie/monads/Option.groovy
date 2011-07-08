@@ -1,6 +1,6 @@
 package hr.helix.monadologie.monads
 
-abstract class Option<A> implements Monad<Option<A>> {
+abstract class Option<A> implements MonadPlus<Option<A>> {
 
     abstract A get()
 
@@ -65,9 +65,9 @@ abstract class Option<A> implements Monad<Option<A>> {
 
     // --- Monad interface implementation ---
 
-    Option unit(Object a) { some(a) }
+    @Override Option unit(Object a) { some(a) }
 
-    Option bind(Closure f) {
+    @Override Option bind(Closure f) {
         someOrNone { f(get()) }
     }
 
@@ -75,7 +75,17 @@ abstract class Option<A> implements Monad<Option<A>> {
         someOrNone { f(get()) ? this : none() }
     }
 
+    // --- MonadPlus interface implementation ---
+
+    @Override Option<A> mzero() { none() }
+
+    @Override Option<A> mplus(Option<A> other) {
+        other.isNone() ? this : other
+    }
+
+
+
     private Option someOrNone(Closure someVal) {
-        this in None ? this : someVal()
+        this.isNone() ? this : someVal()
     }
 }
