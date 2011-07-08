@@ -20,7 +20,7 @@ public interface MonadPlus<M> extends Monad<M> {
      *
      * @return neutral element (identity)
      */
-    MonadPlus<M> getMzero()
+    M mzero()
 
     /**
      * Joins this and other monadplus.
@@ -31,6 +31,6 @@ public interface MonadPlus<M> extends Monad<M> {
      * @param other the other object to join with this.
      * @return new monadplus that is the result of this + other
      */
-    MonadPlus<M> mplus(MonadPlus<M> other)
+    M mplus(M other)
 
 }
