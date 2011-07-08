@@ -37,7 +37,7 @@ class MMapCategory extends FunctorCategory<Map> {
 
     // MonadPlus interface
 
-    static Map getMzero(Map map) {
+    static Map mzero(Map map) {
         [:]
     }
 

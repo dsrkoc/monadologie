@@ -23,7 +23,7 @@ class MListCategory extends FunctorCategory<List> {
 
     // MonadPlus interface
 
-    static List getMzero(List list) {
+    static List mzero(List list) {
         []
     }
 

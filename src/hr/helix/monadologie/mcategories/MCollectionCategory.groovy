@@ -21,7 +21,7 @@ class MCollectionCategory extends FunctorCategory<Collection> {
 
     // MonadPlus interface
 
-    static Collection getMzero(Collection coll) {
+    static Collection mzero(Collection coll) {
         coll.getClass().newInstance()
     }
 
