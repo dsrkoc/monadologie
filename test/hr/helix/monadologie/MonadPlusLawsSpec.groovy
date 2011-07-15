@@ -35,6 +35,23 @@ class MonadPlusLawsSpec extends Specification {
         option << [ Option.some(3), Option.some('foo'), Option.none() ]
     }
 
+    def 'For Option, mzero should always be None, mplus should return just one value if exists'() {
+        given:
+        def none  = Option.none()
+        def some1 = Option.some(3)
+        def some2 = Option.some('foo')
+
+        expect:
+        some1.mzero() == none
+        none.mzero()  == none
+
+        some1.mplus(some2) == some1
+        some2.mplus(some1) == some2
+        some1.mplus(none)  == some1
+        none.mplus(some1)  == some1
+        none.mplus(none)   == none
+    }
+
     private void testPlusCategory(MPlusCategory, ma) {
         use(MPlusCategory) {
             testSum(ma)
