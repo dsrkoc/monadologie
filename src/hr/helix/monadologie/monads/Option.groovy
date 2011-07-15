@@ -3,16 +3,26 @@ package hr.helix.monadologie.monads
 abstract class Option<A> implements MonadPlus<Option<A>> {
 
     abstract A get()
+    abstract boolean isEmpty()
 
     static <T> Option<T> some(final T a) { new Some<T>(a) }
-    static <T> Option<T> none() { new None<T>() }
+    static <T> Option<T> none() { _none }
 
-    Boolean isSome() { this in Some }
-    Boolean isNone() { this in None }
+    private static final Option _none = new None()
 
-    A orSome(final A a) { isSome() ? get() : a }
+    Boolean isSome() { !isEmpty() }
+    Boolean isNone() {  isEmpty() }
 
-    Option<A> orElse(final Option<A> o) { isSome() ? this : o }
+    A orSome(final A a) { isEmpty() ? a : get() }
+
+    /**
+     * Return this Option if it is nonempty, otherwise return the result of
+     * evaluating alternative.
+     *
+     * @param alternative the alternative expression
+     * @return this or alternative Option
+     */
+    public <B> Option<A> orElse(final Option<B> alternative) { isEmpty() ? alternative : this }
 
     private static final class Some<A> extends Option<A> {
         @Delegate private List wrapper
@@ -24,6 +34,7 @@ abstract class Option<A> implements MonadPlus<Option<A>> {
         }
 
         A get() { value }
+        @Override boolean isEmpty() { false }
 
         @Override String toString() { "Some($value)" }
 
@@ -49,6 +60,7 @@ abstract class Option<A> implements MonadPlus<Option<A>> {
         private None() { wrapper = [] }
 
         A get() { throw new RuntimeException('Cannot resolve value on None') }
+        @Override boolean isEmpty() { true }
 
         @Override String toString() { 'None' }
 
@@ -77,15 +89,12 @@ abstract class Option<A> implements MonadPlus<Option<A>> {
 
     // --- MonadPlus interface implementation ---
 
-    @Override Option<A> mzero() { none() }
+    @Override Option mzero() { none() }
 
-    @Override Option<A> mplus(Option<A> other) {
-        other.isNone() ? this : other
-    }
-
+    @Override Option mplus(Option other) { orElse(other) }
 
 
     private Option someOrNone(Closure someVal) {
-        this.isNone() ? this : someVal()
+        this.isEmpty() ? this : someVal()
     }
 }
