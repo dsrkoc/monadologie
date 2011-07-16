@@ -96,7 +96,7 @@ abstract class Either<L, R> {
 
         // --- Monad interface implementation ---
 
-        Either unit(A a) { Either.left(a) }
+        Either unit(a) { Either.left(a) }
 
         Either bind(Closure f) {
             def res = isLeft() ? f(get()) : e
@@ -132,7 +132,7 @@ abstract class Either<L, R> {
 
         // --- Monad interface implementation ---
 
-        Either unit(B b) { Either.right(b) }
+        Either unit(b) { Either.right(b) }
 
         Either bind(Closure f) {
             isRight() ? f(get()) : e

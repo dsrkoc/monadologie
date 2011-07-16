@@ -77,7 +77,7 @@ abstract class Option<A> implements MonadPlus<Option<A>> {
 
     // --- Monad interface implementation ---
 
-    @Override Option unit(Object a) { some(a) }
+    @Override Option unit(a) { some(a) }
 
     @Override Option bind(Closure f) {
         someOrNone { f(get()) }
