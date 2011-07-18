@@ -146,14 +146,10 @@ abstract class Either<L, R> {
     }
 
     static <A, B> List<A> lefts(List<Either<A, B>> es) {
-        es.inject([]) { res, e ->
-            e.isLeft() ? (res << e.left().value) : res
-        }
+        es.sum { Either e -> e.isLeft() ? [ e.left().value ] : [] }
     }
 
     static <A, B> List<B> rights(List<Either<A, B>> es) {
-        es.inject([]) { res, e ->
-            e.isRight() ? (res << e.right().value) : res
-        }
+        es.sum { Either e -> e.isRight() ? [ e.left().value ] : [] }
     }
 }
