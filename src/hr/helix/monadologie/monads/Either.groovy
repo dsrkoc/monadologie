@@ -5,20 +5,20 @@ abstract class Either<L, R> implements Monad<Either> {
     static <A, B> Either<A, B> left(final A l)  { new Left<A, B>(l) }
     static <A, B> Either<A, B> right(final B r) { new Right<A, B>(r) }
 
-    Boolean isLeft()  { false }
-    Boolean isRight() { false }
+    boolean isLeft()  { false }
+    boolean isRight() { false }
 
     abstract Object get()
 
-    L getLeft()  { throw new NoSuchElementException('Cannot resolve left value') }
-    R getRight() { throw new NoSuchElementException('Cannot resolve right value') }
+    L getLeftValue()  { throw new NoSuchElementException('Cannot resolve left value') }
+    R getRightValue() { throw new NoSuchElementException('Cannot resolve right value') }
 
     def either(final Closure leftAction, final Closure rightAction) {
-        isLeft() ? leftAction(left) : rightAction(right)
+        left ? leftAction(leftValue) : rightAction(rightValue)
     }
 
     static <A> A reduce(final Either<A, A> e) {
-        e.isLeft() ? e.left : e.right
+        e.left ? e.leftValue : e.rightValue
     }
 
     private static final class Left<L, R> extends Either<L, R> {
@@ -26,9 +26,9 @@ abstract class Either<L, R> implements Monad<Either> {
 
         Left(final L l) { value = l }
 
-        @Override Boolean isLeft() { true }
+        @Override boolean isLeft() { true }
         @Override Object get() { value }
-        @Override L getLeft()  { value }
+        @Override L getLeftValue()  { value }
 
         String toString() { "Left($value)" }
 
@@ -54,9 +54,9 @@ abstract class Either<L, R> implements Monad<Either> {
 
         Right(final R r) { value = r }
 
-        @Override Boolean isRight() { true }
+        @Override boolean isRight() { true }
         @Override Object get() { value }
-        @Override R getRight() { value }
+        @Override R getRightValue() { value }
 
         String toString() { "Right($value)" }
 
@@ -81,11 +81,11 @@ abstract class Either<L, R> implements Monad<Either> {
     @Override Either unit(Object a) { Either.right(a) }
 
     @Override Either bind(Closure f) {
-        isRight() ? f(get()) : this
+        right ? f(get()) : this
     }
 
     Option filter(Closure f) {
-        isRight() ?
+        right ?
             (f(get()) ? Option.some(this) : Option.none()) :
             Option.none()
     }
@@ -93,10 +93,10 @@ abstract class Either<L, R> implements Monad<Either> {
     // --- ---
 
     static <A, B> List<A> lefts(List<Either<A, B>> es) {
-        es.sum { Either e -> e.isLeft() ? [ e.left ] : [] }
+        es.sum { Either e -> e.left ? [ e.leftValue ] : [] }
     }
 
     static <A, B> List<B> rights(List<Either<A, B>> es) {
-        es.sum { Either e -> e.isRight() ? [ e.right ] : [] }
+        es.sum { Either e -> e.right ? [ e.rightValue ] : [] }
     }
 }
