@@ -131,6 +131,11 @@ class MonadLawsSpec extends Specification {
         def f = { monad.unit(it + 1) }
         def g = { monad.unit(it * 2) }
 
+        expect:
+        identityLaw(monad)
+        unitLaw(monad, a, f)
+        compositionLaw(monad, f, g)
+/*
         when:
          // law: identity
         def idLeft  = monad.bind({ x -> monad.unit(x) })
@@ -148,9 +153,10 @@ class MonadLawsSpec extends Specification {
         idLeft   == idRight
         unitLeft == unitRight
         cmpLeft  == cmpRight
+*/
 
         where:
-        monad << [ Either.right(1).right(), Either.right(2).right() ]
+        monad << [ Either.right(1), Either.right(2) ]
         a << [1, 2]
     }
 

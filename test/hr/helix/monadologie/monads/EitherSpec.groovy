@@ -52,14 +52,12 @@ class EitherSpec extends Specification {
 
     def 'monad functions should behave as expected'() {
         expect:
-        left.left().unit(4)   == Either.left(4)
-        left.right().unit(5)  == Either.right(5)
-        right.left().unit(6)  == Either.left(6)
-        right.right().unit(7) == Either.right(7)
+        left.unit(4)   == Either.right(4)
+        right.unit(6)  == Either.right(6)
 
-        left.left().bind { Either.left(it + 1) }  == Either.left(2)
-        left.right().bind { Either.left(it + 1) } == left
-        right.left().bind { Either.left(it + 2) } == right
-        right.right().bind { Either.right(it + 3) } == Either.right(5)
+        left.bind { Either.left(it + 1) }   == left
+        left.bind { Either.right(it + 1) }  == left
+        right.bind { Either.left(it + 2) }  == Either.left(4)
+        right.bind { Either.right(it + 3) } == Either.right(5)
     }
 }

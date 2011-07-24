@@ -1,24 +1,24 @@
 package hr.helix.monadologie.monads
 
-abstract class Either<L, R> {
-
-    LeftProjection<L, R>  left() { new LeftProjection<L, R>(this) }
-    RightProjection<L, R> right() { new RightProjection<L, R>(this) }
+abstract class Either<L, R> implements Monad<Either> {
 
     static <A, B> Either<A, B> left(final A l)  { new Left<A, B>(l) }
     static <A, B> Either<A, B> right(final B r) { new Right<A, B>(r) }
 
-    abstract Boolean isLeft()
-    abstract Boolean isRight()
+    Boolean isLeft()  { false }
+    Boolean isRight() { false }
+
+    abstract Object get()
+
+    L getLeft()  { throw new NoSuchElementException('Cannot resolve left value') }
+    R getRight() { throw new NoSuchElementException('Cannot resolve right value') }
 
     def either(final Closure leftAction, final Closure rightAction) {
-        isLeft() ?
-            leftAction(left().get()) :
-            rightAction(right().get())
+        isLeft() ? leftAction(left) : rightAction(right)
     }
 
     static <A> A reduce(final Either<A, A> e) {
-        e.isLeft() ? e.left().get() : e.right().get()
+        e.isLeft() ? e.left : e.right
     }
 
     private static final class Left<L, R> extends Either<L, R> {
@@ -26,8 +26,9 @@ abstract class Either<L, R> {
 
         Left(final L l) { value = l }
 
-        Boolean isLeft()  { true }
-        Boolean isRight() { false }
+        @Override Boolean isLeft() { true }
+        @Override Object get() { value }
+        @Override L getLeft()  { value }
 
         String toString() { "Left($value)" }
 
@@ -53,8 +54,9 @@ abstract class Either<L, R> {
 
         Right(final R r) { value = r }
 
-        Boolean isLeft()  { false }
-        Boolean isRight() { true }
+        @Override Boolean isRight() { true }
+        @Override Object get() { value }
+        @Override R getRight() { value }
 
         String toString() { "Right($value)" }
 
@@ -74,82 +76,27 @@ abstract class Either<L, R> {
         }
     }
 
-    final class LeftProjection<A, B> implements Monad<Either> {
-        private final Either<A, B> e
+    // --- Monad interface implementation ---
 
-        private LeftProjection(final Either<A, B> either) {
-            e = either
-        }
+    @Override Either unit(Object a) { Either.right(a) }
 
-        A get() {
-            if (e.isLeft())
-                e.value
-            else
-                throw new RuntimeException('left.value on Right')
-        }
-
-        /**
-         * The Either value underlying this projection.
-         * @return Either object encapsulated by the projection
-         */
-        Either<A, B> either() { e }
-
-        // --- Monad interface implementation ---
-
-        Either unit(a) { Either.left(a) }
-
-        Either bind(Closure f) {
-            def res = isLeft() ? f(get()) : e
-            res
-        }
-
-        Option filter(Closure f) {
-            isLeft() && f(get()) ?
-                Option.some(e) :
-                Option.none()
-        }
+    @Override Either bind(Closure f) {
+        isRight() ? f(get()) : this
     }
 
-    final class RightProjection<A, B> implements Monad<Either> {
-        private final Either<A, B> e
-
-        private RightProjection(final Either<A, B> either) {
-            e = either
-        }
-
-        B get() {
-            if (e.isRight())
-                e.value
-            else
-                throw new RuntimeException('right.value on Left')
-        }
-
-        /**
-         * The Either value underlying this projection.
-         * @return Either object encapsulated by the projection
-         */
-        Either<A, B> either() { e }
-
-        // --- Monad interface implementation ---
-
-        Either unit(b) { Either.right(b) }
-
-        Either bind(Closure f) {
-            isRight() ? f(get()) : e
-        }
-
-        Option filter(Closure f) {
-            isRight() && f(get()) ?
-                Option.some(e) :
-                Option.none()
-        }
+    Option filter(Closure f) {
+        isRight() ?
+            (f(get()) ? Option.some(this) : Option.none()) :
+            Option.none()
     }
+
+    // --- ---
 
     static <A, B> List<A> lefts(List<Either<A, B>> es) {
-        es.sum { Either e -> e.isLeft() ? [ e.left().value ] : [] }
+        es.sum { Either e -> e.isLeft() ? [ e.left ] : [] }
     }
 
     static <A, B> List<B> rights(List<Either<A, B>> es) {
-        es.sum { Either e -> e.isRight() ? [ e.left().value ] : [] }
+        es.sum { Either e -> e.isRight() ? [ e.right ] : [] }
     }
 }

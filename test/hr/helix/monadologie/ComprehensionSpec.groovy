@@ -17,6 +17,7 @@ import static hr.helix.monadologie.monads.Writer.write as wr
  */
 class ComprehensionSpec extends Specification {
 
+//    @spock.lang.Unroll
     def 'testing simple comprehensions'() {
         when:
         def res = foreach {
@@ -39,9 +40,10 @@ class ComprehensionSpec extends Specification {
         [some(1), some(2)]            | { a, b -> a + b }             | some(3)
         [some(3), none() ]            | { a, b -> a + b }             | none()
         [some(3),none(),some(4)]      | { a, b -> a + b }             | none()
-        [er(1).right(), er(2).right()]| { a, b -> a + b }             | er(3)
-        [el(1).left(), el(2).left()]  | { a, b -> a + b }             | el(3)
-        [er(1).right(), el(2).left()] | { a, b -> a + b }             | el(3)
+        [er(1), er(2)]                | { a, b -> a + b }             | er(3)
+        [el(1), el(2)]                | { a, b -> a + b }             | el(1) //el(3)
+        [er(1), el(2)]                | { a, b -> a + b }             | el(2) //el(3)
+        [el(1), er(2)]                | { a, b -> a + b }             | el(1)
         [wr(1, 'aa'), wr(2, 'bb')]    | { a, b -> a + b }             | wr(3, 'aabb')
         [wr(3, [1, 2]), wr(2, ['aa'])]| { a, b -> a * b }             | wr(6, [1, 2, 'aa'])
         [wr('a', 1), wr('b', 2)]      | { a, b -> a + b }             | wr('ab', 3)
