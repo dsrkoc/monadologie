@@ -5,17 +5,20 @@ abstract class Option<A> implements Monad<Option<A>> {
     abstract A get()
 
     static <T> Option<T> some(final T a) { new Some<T>(a) }
+
     static <T> Option<T> none() { new None<T>() }
 
-    Boolean isSome() { this in Some }
-    Boolean isNone() { this in None }
+    abstract Boolean isSome()
+
+    abstract Boolean isNone()
 
     A orSome(final A a) { isSome() ? get() : a }
 
     Option<A> orElse(final Option<A> o) { isSome() ? this : o }
 
     private static final class Some<A> extends Option<A> {
-        @Delegate private List wrapper
+        @Delegate
+        private List wrapper
         private final A value
 
         private Some(final A val) {
@@ -23,9 +26,16 @@ abstract class Option<A> implements Monad<Option<A>> {
             wrapper = [val]
         }
 
+        @Override
+        Boolean isSome() { return true }
+
+        @Override
+        Boolean isNone() { return false }
+
         A get() { value }
 
-        @Override String toString() { "Some($value)" }
+        @Override
+        String toString() { "Some($value)" }
 
         boolean equals(o) {
             if (this.is(o)) return true
@@ -44,13 +54,21 @@ abstract class Option<A> implements Monad<Option<A>> {
     }
 
     private static final class None<A> extends Option<A> {
-        @Delegate private List wrapper
+        @Delegate
+        private List wrapper
 
         private None() { wrapper = [] }
 
         A get() { throw new RuntimeException('Cannot resolve value on None') }
 
-        @Override String toString() { 'None' }
+        @Override
+        Boolean isSome() { false }
+
+        @Override
+        Boolean isNone() { true }
+
+        @Override
+        String toString() { 'None' }
 
         boolean equals(o) {
             if (this.is(o)) return true
@@ -75,7 +93,7 @@ abstract class Option<A> implements Monad<Option<A>> {
         someOrNone { f(get()) ? this : none() }
     }
 
-    private Option someOrNone(Closure someVal) {
-        this in None ? this : someVal()
+    protected Option someOrNone(Closure someVal) {
+        isNone() ? this : someVal()
     }
 }
