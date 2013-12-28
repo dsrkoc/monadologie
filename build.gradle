@@ -7,7 +7,7 @@
  */
 
 apply plugin:'groovy'
-
+apply plugin: 'idea'
 
 group = 'hr.helix'
 version = '0.2.1'
