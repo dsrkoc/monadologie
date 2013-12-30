@@ -92,8 +92,7 @@ class Monoids {
      * @return option monoid
      */
     static Monoid<Option> asMonoid(Option o) {
-        Monoid<Option> self
-        //noinspection GroovyVariableNotAssigned
+        Monoid<Option> self=null
         self=new BaseMonoid<Option>(o) {
             @Override Monoid<Option> getIdentity() { asMonoid((Option)Option.none()) }
 
