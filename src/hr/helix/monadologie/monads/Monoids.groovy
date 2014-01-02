@@ -92,14 +92,15 @@ class Monoids {
      * @return option monoid
      */
     static Monoid<Option> asMonoid(Option o) {
-        new BaseMonoid<Option>(o) {
+        Monoid<Option> self=null
+        self=new BaseMonoid<Option>(o) {
             @Override Monoid<Option> getIdentity() { asMonoid((Option)Option.none()) }
 
             @Override Monoid<Option> append(Monoid other) {
                 if (o.isNone())
                     other
                 else if (other.get().isNone())
-                    this
+                    self
                 else
                     asMonoid((Option)Option.some(
                             asMonoid(o.get()).append(asMonoid(other.get().get())).get()))

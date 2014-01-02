@@ -7,16 +7,18 @@
  */
 
 apply plugin:'groovy'
+apply plugin: 'idea'
 
-version = '0.2'
+group = 'hr.helix'
+version = '0.2.1'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    groovy group:'org.codehaus.groovy', name:'groovy-all', version:'1.7.10', ext:'jar'
-    testCompile 'org.spockframework:spock-core:0.5-groovy-1.7'
+    compile group:'org.codehaus.groovy', name:'groovy-all', version:'1.8.8', ext:'jar'
+    testCompile 'org.spockframework:spock-core:0.7-groovy-1.8'
 }
 
 sourceSets {
@@ -36,3 +38,4 @@ task srcJar(type: Jar) {
     classifier = 'src'
     from sourceSets.main.allGroovy
 }
+
