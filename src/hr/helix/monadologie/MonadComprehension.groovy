@@ -121,7 +121,7 @@ class MonadComprehension {
 
     static foreach(Closure comprehension) {
         comprehension.delegate = new MonadComprehension()
-        comprehension.resolveStrategy = Closure.DELEGATE_ONLY
+        comprehension.resolveStrategy = Closure.DELEGATE_FIRST
         comprehension()
     }
 }
